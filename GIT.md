@@ -75,8 +75,12 @@ git cherry-pick <commit id>
 ```git
 git remote add 远程仓库名 远程仓库地址
 
-git push 远程仓库名 本地分支名称[:远程分支名称]
+git push [--set-upstream] 远程仓库名 本地分支名称[:远程分支名称]
 
 token: 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
+
+git clone 远程仓库地址
+
+git fetch 远程仓库名
 ```
 

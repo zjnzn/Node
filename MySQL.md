@@ -211,11 +211,13 @@ drop view 视图名
 # 索引
 
 ```sql
-create index 索引名 on 表名(列名)
+create [fulltext| spatial| unique] index 索引名 on 表名(列名) 
 
 show index from 表名
 
 drop index 索引名 on 表名
+
+select * from 表名 where match(列名) against("关键字")
 ```
 
 
@@ -252,4 +254,210 @@ commit
 
 > 原子, 一致, 隔离, 持久
 
-​                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+#### 锁机制
+
+```sql
+set session transaction isolation level 隔离级别
+
+flush tables with read lock
+
+lock table 表名 read/ write
+
+语句... lock in share mode
+
+语句... for update
+
+unlock tables
+```
+
+##### 隔离级别
+
+> - 读未提交: read uncommited
+>
+> - 读已提交: read commited
+> - 可重复读:repeated read 
+> - 串行读: serialization
+
+##### 行锁类型
+
+> - 记录锁 record locks
+> - 间隙锁 gap locks
+> - 临键锁 next-key locks
+
+# 函数
+
+#### 自定义函数
+
+```sql
+create function 函数名(参数 类型) return 类型
+begin
+	declare 变量名称 变量类型[, ...];
+	declare 变量名称 变量类型 default 默认值;
+	set 变量名 = 值;
+	
+	if 表达式 then
+		表达式;
+	else 
+		表达式;
+	end if;
+	
+	case [表达式]
+		when 表达式 then 
+			表达式;
+		else
+			表达式;
+	end case;
+	
+	while 表达式 do
+		表达式;
+	end while;
+	
+	循环名: loop
+		表达式;
+		leave 循环名;
+	end loop 循环名;
+	
+	repeat
+		表达式;
+	until 表达式 end repeat;
+	
+	return 表达式 ;
+end
+
+
+drop function if exists 函数名
+```
+
+#### 全局变量
+
+```sql
+set @变量名 = 值
+
+show global variables
+```
+
+#### 字符串
+
+> substring( 列名, 下标1, 下标2)
+>
+> left( 列名, 长度)
+>
+> right( 列名, 长度)
+>
+> concat( 字符串, 字符串)
+>
+> replace( 列名, 源字符串 , 目标字符串)
+>
+> upper( 字符串)
+>
+> lower( 字符串)
+>
+> length( 字符串)
+
+#### 日期
+
+> date_add( 日期, interval 增量 单位)
+>
+> datedifff( 日期1, 日期2)
+>
+> curdate()
+>
+> curtime()
+>
+> now()
+
+#### 数学
+
+> abs(x)
+>
+> ceiling(x)
+>
+> floor(x)
+>
+> round(x, 精度)
+>
+> exp(x)
+>
+> rand(x)
+>
+> log(x)
+>
+> pi()
+>
+> power(x, n)
+>
+> sqrt(x)
+>
+> sin(x) cos(x) tan(x)
+
+#### 类型转换
+
+> cast(数据 as 数据类型)
+>
+> binary[(n)]
+>
+> char[(n)]
+>
+> date
+>
+> datetime
+>
+> decimal[( m(, n)]
+>
+> signed[integer]
+>
+> time
+>
+> unsigned[interger]
+
+#### 流程控制
+
+> if(条件表达式, 结果1, 结果2)
+>
+> ifnull(值1, 值2)
+>
+> nullif(值1, 值2)
+>
+> isnull(值)
+>
+> sleep(值)
+
+```sql
+case 值
+	when 条件 then
+		结果
+	when 条件 then
+		结果
+	...
+	else
+		结果
+end
+
+case 
+	when 值 条件 then
+		结果
+	when 值 条件 then
+		结果
+	...
+	else
+		结果
+end
+```
+
+# 存储过程
+
+```sql
+create procedure 过程名([in| out| inout] 参数 类型, ...)
+begin
+	declare 游标名 cursor for 查询结果;
+	declare (continue/ exit) handler for 异常名 表达式;
+	open 游标名;
+	fetch 游标名 into 标量
+	close 游标名;
+	
+	表达式;
+end
+
+call 过程名(参数, ...)
+```
+
